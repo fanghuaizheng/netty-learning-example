@@ -7,10 +7,14 @@ import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.SimpleChannelInboundHandler;
 import java.net.InetAddress;
 import java.util.Date;
+import java.util.logging.Logger;
 
 
 @Sharable
-public class ServerHandler extends SimpleChannelInboundHandler<String> {
+public class ServerHandler extends SimpleChannelInboundHandler<byte[]> {
+	
+//	private static final Logger Logger = Lo
+	
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         // 为新连接发送庆祝
@@ -20,10 +24,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String request) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, byte[] req) throws Exception {
         // Generate and write a response.
         String response;
         boolean close = false;
+        String  request = new String(req,"UTF-8");
         if (request.isEmpty()) {
             response = "Please type something.\r\n";
         } else if ("bye".equals(request.toLowerCase())) {
@@ -32,6 +37,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         } else {
             response = "Did you say '" + request + "'?\r\n";
         }
+        
+        
+        System.out.println(response);
+        
 
         ChannelFuture future = ctx.write(response);
 
