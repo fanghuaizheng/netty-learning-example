@@ -5,13 +5,19 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.SimpleChannelInboundHandler;
+import lombok.extern.slf4j.Slf4j;
+
 import java.net.InetAddress;
 import java.util.Date;
 import java.util.logging.Logger;
 
+import com.sanshengshui.netty.utils.DigitalUtils;
+
+
 
 @Sharable
 public class ServerHandler extends SimpleChannelInboundHandler<byte[]> {
+	
 	
 //	private static final Logger Logger = Lo
 	
@@ -26,23 +32,23 @@ public class ServerHandler extends SimpleChannelInboundHandler<byte[]> {
     @Override
     public void channelRead0(ChannelHandlerContext ctx, byte[] req) throws Exception {
         // Generate and write a response.
-        String response;
+//        String response;
         boolean close = false;
-        String  request = new String(req,"UTF-8");
-        if (request.isEmpty()) {
-            response = "Please type something.\r\n";
-        } else if ("bye".equals(request.toLowerCase())) {
-            response = "Have a good day!\r\n";
-            close = true;
-        } else {
-            response = "Did you say '" + request + "'?\r\n";
-        }
+        String  request = DigitalUtils.byte2hex(req);
+//        if (request.isEmpty()) {
+//            response = "Please type something.\r\n";
+//        } else if ("bye".equals(request.toLowerCase())) {
+//            response = "Have a good day!\r\n";
+//            close = true;
+//        } else {
+//            response = "Did you say '" + request + "'?\r\n";
+//        }
         
         
-        System.out.println(response);
+        System.out.println(request);
         
 
-        ChannelFuture future = ctx.write(response);
+        ChannelFuture future = ctx.write(DigitalUtils.hex2byte(request));
 
         if (close) {
             future.addListener(ChannelFutureListener.CLOSE);

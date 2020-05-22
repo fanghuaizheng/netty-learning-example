@@ -30,11 +30,11 @@ public final class Server {
 
             File rootCA = new File(System.getProperty("user.dir")+"/mycert/ca.crt");
             
-//            SslContext sslContext =  SslContextBuilder.forClient().keyManager(client,
-//                    key).trustManager(rootCA).build();
             
             SslContext sslContext = SslContextBuilder.forServer(client,key).
-            		clientAuth(ClientAuth.NONE).sslProvider(SslProvider.OPENSSL).build();
+            		clientAuth(ClientAuth.REQUIRE).sslProvider(SslProvider.OPENSSL)
+            		.trustManager(rootCA)
+            		.build();
             
             b.group(bossGroup,workerGroup)
                     .channel(NioServerSocketChannel.class)
